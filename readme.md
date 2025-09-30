@@ -1,29 +1,7 @@
-# Toast
+# axllr8tr/toast
 
-A go package for Windows 10 toast notifications.
-
-As seen in [jacobmarshall/pokevision-cli](https://github.com/jacobmarshall/pokevision-cli).
-
-## CLI
-
-As well as using go-toast within your Go projects, you can also utilise the CLI - for any of your projects.
-
-Download [64bit](https://go-toast-downloads.s3.amazonaws.com/v1/toast64.exe) or [32bit](https://go-toast-downloads.s3.amazonaws.com/v1/toast32.exe)
-
-```cmd
-C:\Users\Example\Downloads\toast64.exe \
-  --app-id "Example App" \
-  --title "Hello World" \
-  --message "Lorem ipsum dolor sit amet, consectetur adipiscing elit." \
-  --icon "C:\Users\Example\Pictures\icon.png" \
-  --audio "default" --loop \
-  --duration "long" \
-  --activation-arg "https://google.com" \
-  --action "Open maps" --action-arg "bingmaps:?q=sushi" \
-  --action "Open browser" --action-arg "http://..."
-```
-
-![CLI](./screenshot-cli.png)
+An enhanced Go package for toast notifications in Windows 10 (and newer?).  
+Based on <https://github.com/go-toast/toast>
 
 ## Example
 
@@ -31,31 +9,26 @@ C:\Users\Example\Downloads\toast64.exe \
 package main
 
 import (
-    "log"
-
-    "gopkg.in/toast.v1"
+  "github.com/axllr8tr/toast"
+  _ "embed"
 )
 
+//go:embed "gopher.png"
+var gopher []byte // file must exist
+
 func main() {
-    notification := toast.Notification{
-        AppID: "Example App",
-        Title: "My notification",
-        Message: "Some message about how important something is...",
-        Icon: "go.png", // This file must exist (remove this line if it doesn't)
-        Actions: []toast.Action{
-            {"protocol", "I'm a button", ""},
-            {"protocol", "Me too!", ""},
-        },
-    }
-    err := notification.Push()
-    if err != nil {
-        log.Fatalln(err)
-    }
+  notification := toast.Notification{
+    IconBytes: gopher, // or `Icon` for standard behavior, or `IconPath` to also copy it to %temp%
+    IconCrop: "circle",
+    HeroPath: "C:\\Windows\\Web\\Wallpaper\\Windows\\img0.jpg", // can be an absolute or a relative path
+    AppID: "Notification test",
+    Title: "Hello, world!",
+    Message: "I think it's working as expected, and that's cool",
+    Attribution: "via toast package",
+  }
+  notification.Push()
 }
 ```
 
 ## Screenshots
-
-![Toast](./screenshot-toast.png)
-
-![Action centre](./screenshot-action-centre.png)
+<img width="395" height="401" alt="image" src="https://github.com/user-attachments/assets/6f8d92da-fb30-435a-a5bb-e84135ea5f24" />
